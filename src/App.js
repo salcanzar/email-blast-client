@@ -9,6 +9,7 @@ import Interface from './interface'
 
 function App({socket}) {
   const [emails,setEmails] = useState('');
+  const [isStopped,setIsStopped] = useState(false)
   const [editorState, setEditorState] = useState(EditorState.createEmpty())
   const [message, setMessage] = useState('')
   //const inputRef = useRef()
@@ -37,6 +38,9 @@ function App({socket}) {
     socket.on('fail', msg => {
       toast.error(msg)
     })
+    socket.on('message', message => {
+      toast.error(message);
+    })
   },[])
 
   const onEditorStateChange = editorState => {
@@ -47,6 +51,12 @@ function App({socket}) {
     e.preventDefault()
     const payload = {emails, message};
     socket.emit('send payload', payload)
+  }
+  const cancel = (e) => {
+    e.preventDefault()
+    socket.emit('cancel', true);
+    setIsStopped(true);
+
   }
   return (
     <Container>
@@ -71,7 +81,13 @@ function App({socket}) {
           />
         </Col>
       </Row>
-      <Button onClick={send}>Send</Button>
+      <Row>
+        <Col>
+      <Button onClick={send}>Send</Button>{" "}
+        {isStopped ? "": <Button onClick={cancel}>Stop Sending</Button>}
+        </Col>
+        
+      </Row>
     </Container>
   );
 }
