@@ -1,12 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
+import 'react-toastify/dist/ReactToastify.css';
 import * as serviceWorker from './serviceWorker';
+import socketIO from 'socket.io-client'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+let socket = socketIO("http://localhost:8080")
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+ReactDOM.render(<App socket={socket}/>, document.getElementById('root'));
+
 serviceWorker.unregister();
